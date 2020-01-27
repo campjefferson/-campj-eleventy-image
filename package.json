@@ -1,0 +1,21 @@
+{
+  "name": "@campj/eleventy-image",
+  "version": "0.0.3",
+  "repository": "https://github.com/campjefferson/-campj-eleventy-image.git",
+  "description": "Camp Jefferson Eleventy Image Pipeline",
+  "main": "index.js",
+  "keywords": [
+    "Eleventy"
+  ],
+  "author": "Camp Jefferson Dev <dev@campjefferson.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cli-progress": "^3.5.0",
+    "image-size": "^0.8.3",
+    "imagemin": "^7.0.1",
+    "imagemin-mozjpeg": "^8.0.0",
+    "imagemin-pngquant": "^8.0.0",
+    "imagemin-webp": "^5.1.0",
+    "sharp": "^0.24.0"
+  }
+}
