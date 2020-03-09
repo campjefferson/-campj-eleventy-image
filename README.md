@@ -6,7 +6,37 @@ A configurable Eleventy shortcode that builds multiple resolutions of any image.
 
 ### Installation
 
-`npm install --save-dev @campj/image`
+`npm install --save-dev @campj/eleventy-image`
+
+### Environment Variables
+
+#### Source prefix
+
+Set the ELEVENTY_IMAGE_SRC_PREFIX environment variable if you'd like to change where your source images are pulled from.<br> \***\*default**: `src/site`
+
+##### Example 1 (default)
+
+with the default settings you'd do
+
+```
+{% Image src="/img/someimage.jpg" %}
+```
+
+would transform the image located at `./src/site/img/someimage.jpg`. <br>
+
+##### Example 2
+
+**ELEVENTY_IMAGE_SRC_PREFIX=images**
+
+```
+{% Image src="/someimage.jpg" %}
+```
+
+would transform the image located at `./images/someimage.jpg`.
+
+#### Path prefix
+
+Set the ELEVENTY_PATH_PREFIX environment variable if you'd like to prepend a prefix to your image paths<br> \***\*default**: none
 
 ### Adding to Eleventy
 
@@ -15,9 +45,9 @@ in .eleventy.js:
 ```js
 // require
 const { Image } = require("@campj/eleventy-image");
-module.exports = function(config) {
+module.exports = function(eleventyConfig) {
   // Shortcode
-  config.addNunjucksAsyncShortcode("Image", Image);
+  eleventyConfig.addNunjucksAsyncShortcode("Image", Image);
   //
 };
 ```
@@ -29,7 +59,6 @@ module.exports = function(config) {
 ```
 {% Image
     src = "/img/placeholder-1.jpg",
-    pathPrefix= "src/site",
     maxWidths = [200, 500, 768, 1024, 1368]
 %}
 ```
@@ -38,7 +67,6 @@ module.exports = function(config) {
 
 - **src:** path to the image
 - **alt:** alt text for the image
-- **pathPrefix:** non http(s) src will be resolved to {pathPrefix}/{src} (default:_src/site_)
 - **maxWidths:** array of per-breakpoint widths to resize the image to (default:_[250, 500, 800, 1368]_)
 - **useBase64:** boolean - whether to generate a base64 placeholder image (default: _false_)
 - **backgroundColor** css color - color to use as a placeholder while the image loads (default: _null_)

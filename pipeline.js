@@ -10,6 +10,9 @@ const imageminPngquant = require("imagemin-pngquant");
 const imageminWebp = require("imagemin-webp");
 const sizeOf = require("image-size");
 
+const pathPrefix = process.env.ELEVENTY_PATH_PREFIX || ``;
+const srcPrefix = process.env.ELEVENTY_IMAGE_SRC_PREFIX || `src/site`;
+console.log("eleventy-image:: path prefix is", pathPrefix);
 /** IMAGE CACHE */
 // get the info about the image cache from package.json
 const pkg = JSON.parse(
@@ -31,6 +34,7 @@ let isProcessing = {};
 /** IMAGE COMPRESSION */
 // image compression defaults
 // modifiable by params of the Image shortComponent
+
 const DEFAULTS = {
   quality: 70,
   png: { speed: 1, dithering: 1 },
@@ -185,7 +189,6 @@ function _copyImageFromCache(sizes, baseName, sourceExtName) {
 async function makeThumbnails(
   src,
   maxWidths,
-  pathPrefix = `src/site`,
   compressionProps = { quality: DEFAULTS.quality }
 ) {
   // add a prefix slash
@@ -213,7 +216,7 @@ async function makeThumbnails(
 
   // get the actual path to the image
   // (paths with /img/{filename} map to {cwd}/src/site/img/{filename})
-  const sourceImagePath = path.resolve(process.cwd(), `./${pathPrefix}${src}`);
+  const sourceImagePath = path.resolve(process.cwd(), `./${srcPrefix}${src}`);
   const sourceExtName = path.extname(src);
   const baseName = path.basename(src, path.extname(src));
   const optimizationMethod = sourceExtName === `.png` ? "png" : "jpeg";
@@ -342,7 +345,7 @@ async function makeThumbnails(
 
 function getSrcSets(src, asDataAttribute = false) {
   const extName = path.extname(src);
-  const dirName = `${path.dirname(src)}/compressed`;
+  const dirName = `${pathPrefix}${path.dirname(src)}/compressed`;
   const baseName = path.basename(src).replace(extName, "");
 
   return `<source ${asDataAttribute &&
@@ -377,7 +380,7 @@ async function getDimensions(src) {
   if (src.indexOf(`http`) === 0) {
     sourceImage = await downloadImageBuffer(src);
   } else {
-    sourceImage = path.resolve(process.cwd(), `./src/site${src}`);
+    sourceImage = path.resolve(process.cwd(), `${srcPrefix}${src}`);
   }
   dimensions = sizeOf(sourceImage);
   return dimensions;
@@ -391,7 +394,7 @@ async function getDefaultImage(src, useBase64 = false) {
   let base64Buffer = null;
 
   if (useBase64) {
-    const sourceImagePath = path.resolve(process.cwd(), `./src/site${src}`);
+    const sourceImagePath = path.resolve(process.cwd(), `${srcPrefix}${src}`);
     base64Buffer = await sharp(sourceImagePath)
       .resize(32)
       .toBuffer();
@@ -399,7 +402,12 @@ async function getDefaultImage(src, useBase64 = false) {
 
   return useBase64
     ? `data:image/png;base64,${base64Buffer.toString("base64")}`
-    : `${dirName}/${baseName}-sm${extName}`;
+    : `${pathPrefix}${dirName}/${baseName}-sm${extName}`;
 }
 
-module.exports = { getDefaultImage, getDimensions, getSrcSets, makeThumbnails };
+module.exports = {
+  getDefaultImage,
+  getDimensions,
+  getSrcSets,
+  makeThumbnails
+};
