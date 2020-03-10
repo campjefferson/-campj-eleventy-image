@@ -11,6 +11,14 @@ const FADEUP_IMAGE_STYLE = {
   transition: `opacity 0.4s ease-out`
 };
 
+const DEFAULT_CAPTION_STYLE = {
+  position: `absolute`,
+  display: `block`,
+  bottom: `0`,
+  padding: `2px 10px`,
+  "background-color": `white`
+};
+
 function _getContainerStyle(aspect) {
   const aspectPercent = `${aspect * 100}%`;
   return {
@@ -66,6 +74,8 @@ module.exports = async ({
   style = {},
   backgroundColor = null,
   rootMargin = null,
+  caption = null,
+  captionStyle = {},
   ...rest
 }) => {
   const isRemoteImage = src.indexOf(`http`) === 0;
@@ -115,6 +125,10 @@ module.exports = async ({
   const imgSrc = isRemoteImage ? src : await getDefaultImage(src, useBase64);
   const altImgSrc = isRemoteImage ? src : await getDefaultImage(src, false);
 
+  captionStyle = _getStyles(
+    Object.assign({ ...DEFAULT_CAPTION_STYLE }, captionStyle)
+  );
+
   return `<${tag} ${attrs}${
     rootMargin ? ` data-rootmargin="${rootMargin}"` : ``
   }>${
@@ -133,5 +147,10 @@ module.exports = async ({
     dimensions.width
   }" height="${dimensions.height}" ${imgAttrs}></noscript>
       </picture>
+      ${
+        caption
+          ? `<figcaption style="${captionStyle}">${caption}</figcaption>`
+          : ``
+      }
       </${tag}>`;
 };

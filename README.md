@@ -67,11 +67,24 @@ module.exports = function(eleventyConfig) {
 
 - **src:** path to the image
 - **alt:** alt text for the image
-- **maxWidths:** array of per-breakpoint widths to resize the image to (default:_[250, 500, 800, 1368]_)
-- **useBase64:** boolean - whether to generate a base64 placeholder image (default: _false_)
-- **backgroundColor** css color - color to use as a placeholder while the image loads (default: _null_)
-- **rootMargin** rootMargin string - to be used in conjunction with [@campj/lazy-image]() (default:_"400px 300px"_)
-- **tag:** html tag to use for the wrapper element (default: _figure_)
+- **maxWidths:** array of per-breakpoint widths to resize the image to (default:`[250, 500, 800, 1368]`)
+- **useBase64:** boolean - whether to generate a base64 placeholder image (default: `false`)
+- **backgroundColor** css color - color to use as a placeholder while the image loads (default: `null`)
+- **rootMargin** rootMargin string - to be used in conjunction with [@campj/lazy-image](https://www.npmjs.com/package/@campj/lazy-image) (default:`"400px 300px"`)
+- **tag:** html tag to use for the wrapper element (default: `figure`)
+- **caption:** if included, will add a `<figcaption>` element with the caption (default: `null`)
+- **captionStyle:** will merge with default style for captions if present - defaults are:
+
+  ```js
+  {
+    position: "absolute",
+    display: "block",
+    bottom: 0,
+    padding: "2px 10px",
+    "background-color": "white"
+  }
+  ```
+
 - **imgProps:** extra properties to apply to the image
 
 \*\* other properties will get applied to the wrapper tag as attributes
