@@ -2,13 +2,13 @@ const {
   makeThumbnails,
   getDimensions,
   getSrcSets,
-  getDefaultImage
+  getDefaultImage,
 } = require("./pipeline");
 
 const FADEUP_IMAGE_STYLE = {
   visibility: `hidden`,
   opacity: 0,
-  transition: `opacity 0.4s ease-out`
+  transition: `opacity 0.4s ease-out`,
 };
 
 const DEFAULT_CAPTION_STYLE = {
@@ -16,7 +16,7 @@ const DEFAULT_CAPTION_STYLE = {
   display: `block`,
   bottom: `0`,
   padding: `2px 10px`,
-  "background-color": `white`
+  "background-color": `white`,
 };
 
 function _getContainerStyle(aspect) {
@@ -26,7 +26,7 @@ function _getContainerStyle(aspect) {
     display: `block`,
     width: `100%`,
     height: 0,
-    "padding-top": aspectPercent
+    "padding-top": aspectPercent,
   };
 }
 
@@ -37,7 +37,7 @@ function _getImageStyle() {
     left: `0`,
     width: `100%`,
     height: `100%`,
-    "object-fit": `cover`
+    "object-fit": `cover`,
   };
 }
 
@@ -46,7 +46,7 @@ function _getStyles(obj) {
   const styleKeys = Object.keys(obj);
 
   if (styleKeys.length > 0) {
-    styles = `${styleKeys.map(key => ` ${key}:${obj[key]};`).join("")}`;
+    styles = `${styleKeys.map((key) => ` ${key}:${obj[key]};`).join("")}`;
   }
   return styles;
 }
@@ -56,7 +56,7 @@ function _getAttrs(obj) {
   const attrKeys = Object.keys(obj);
 
   if (attrKeys.length > 0) {
-    attrs = `${attrKeys.map(key => ` ${key}="${obj[key]}"`).join("")}`;
+    attrs = `${attrKeys.map((key) => ` ${key}="${obj[key]}"`).join("")}`;
   }
   return attrs;
 }
@@ -96,7 +96,7 @@ module.exports = async ({
             backgroundColor ? { "background-color": backgroundColor } : {},
             style
           )
-        )
+        ),
       },
       rest
     )
@@ -105,7 +105,7 @@ module.exports = async ({
   const imgAttrs = _getAttrs(
     Object.assign(
       {
-        style: _getStyles(Object.assign(imageStyle, imgProps.style || {}))
+        style: _getStyles(Object.assign(imageStyle, imgProps.style || {})),
       },
       imgProps
     )
@@ -116,7 +116,7 @@ module.exports = async ({
       {
         style: _getStyles(
           Object.assign(imageStyle, imgProps.style || {}, FADEUP_IMAGE_STYLE)
-        )
+        ),
       },
       imgProps
     )
