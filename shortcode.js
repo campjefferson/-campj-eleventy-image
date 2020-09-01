@@ -78,7 +78,7 @@ module.exports = async ({
   captionStyle = {},
   ...rest
 }) => {
-  const isRemoteImage = src.indexOf(`http`) === 0;
+  const isRemoteImage = src.indexOf(`http`) === 0 || src.indexOf(`https`) === 0;
   const dimensions = await getDimensions(src);
   const aspect = dimensions.height / dimensions.width;
   const containerStyle = _getContainerStyle(aspect);

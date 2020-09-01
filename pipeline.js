@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const url = require("url");
 const http = require("http");
+const https = require("https");
 const sharp = require("sharp");
 const cliProgress = require("cli-progress");
 const imagemin = require("imagemin");
@@ -38,7 +39,7 @@ let isProcessing = {};
 const DEFAULTS = {
   quality: 70,
   png: { speed: 1, dithering: 1 },
-  jpg: { progressive: true }
+  jpg: { progressive: true },
 };
 /* /IMAGE COMPRESSION */
 
@@ -63,7 +64,7 @@ function _createProgressBar() {
       {
         format: _formatter,
         clearOnComplete: true,
-        hideCursor: true
+        hideCursor: true,
       },
       cliProgress.Presets.shades_grey
     );
@@ -105,10 +106,10 @@ function _getImageminPlugins(ext, options) {
       const opts = {
         quality: [
           (options.quality || DEFAULTS.quality) / 100,
-          Math.min(((options.quality || DEFAULTS.quality) + 20) / 100, 1)
+          Math.min(((options.quality || DEFAULTS.quality) + 20) / 100, 1),
         ],
         speed: DEFAULTS.png.speed,
-        strip: DEFAULTS.png.strip
+        strip: DEFAULTS.png.strip,
       };
       return imageminPngquant(opts);
     case `jpg`:
@@ -116,7 +117,7 @@ function _getImageminPlugins(ext, options) {
     case `JPEG`:
       return imageminMozjpeg({
         quality: options.quality || DEFAULTS.quality,
-        progressive: options.jpegProgressive || DEFAULTS.jpg.progressive
+        progressive: options.jpegProgressive || DEFAULTS.jpg.progressive,
       });
     case `webp`:
       return imageminWebp({ quality: options.quality || DEFAULTS.quality });
@@ -130,7 +131,7 @@ const SIZES = [
   { w: 250, suffix: `sm` },
   { w: 500, suffix: `md` },
   { w: 800, suffix: `lg` },
-  { w: 1368, suffix: `hd` }
+  { w: 1368, suffix: `hd` },
 ];
 
 function _createDirectories() {
@@ -222,7 +223,7 @@ async function makeThumbnails(
   const optimizationMethod = sourceExtName === `.png` ? "png" : "jpeg";
 
   // initialize a sizes array based on the defaults
-  let sizes = SIZES.map(s => s);
+  let sizes = SIZES.map((s) => s);
   // then replace with user defined size index (passed to the Image shortComp in the maxWidths prop)
   if (maxWidths) {
     maxWidths.forEach((w, idx) => (sizes[idx].w = w));
@@ -253,7 +254,7 @@ async function makeThumbnails(
       numImages++;
       if (!bar) {
         bar = imageProgressBar.create(1, 0, {
-          format: _formatter
+          format: _formatter,
         });
       }
       try {
@@ -261,19 +262,19 @@ async function makeThumbnails(
       } catch (e) {}
 
       const opts = Object.assign(productionCompressionProps, {
-        force: _getFormat(sourceExtName)
+        force: _getFormat(sourceExtName),
       });
       promises.push(
         sharp(sourceImagePath)
           .resize(w, null, { withoutEnlargement: true })
           [optimizationMethod](opts)
           .toBuffer()
-          .then(sharpBuffer =>
+          .then((sharpBuffer) =>
             imagemin.buffer(sharpBuffer, {
-              plugins: [_getImageminPlugins(sourceExtName, opts)]
+              plugins: [_getImageminPlugins(sourceExtName, opts)],
             })
           )
-          .then(imageminBuffer => {
+          .then((imageminBuffer) => {
             fs.writeFileSync(outputFileNameReg, imageminBuffer);
             // move to dist
             if (!fs.existsSync(distFileNameReg)) {
@@ -282,7 +283,7 @@ async function makeThumbnails(
             try {
               bar.increment(1, {
                 log: true,
-                filename: `${baseName}${sourceExtName}`
+                filename: `${baseName}${sourceExtName}`,
               });
             } catch (e) {}
           })
@@ -291,26 +292,26 @@ async function makeThumbnails(
       numImages++;
       if (!bar) {
         bar = imageProgressBar.create(1, 0, {
-          format: _formatter
+          format: _formatter,
         });
       }
       try {
         bar.setTotal(numImages);
       } catch (e) {}
       const webpOpts = Object.assign(productionCompressionProps, {
-        force: `webp`
+        force: `webp`,
       });
       promises.push(
         sharp(sourceImagePath)
           .resize(w, null, { withoutEnlargement: true })
           .webp(webpOpts)
           .toBuffer()
-          .then(sharpBuffer =>
+          .then((sharpBuffer) =>
             imagemin.buffer(sharpBuffer, {
-              plugins: [_getImageminPlugins(`webp`, webpOpts)]
+              plugins: [_getImageminPlugins(`webp`, webpOpts)],
             })
           )
-          .then(imageminBuffer => {
+          .then((imageminBuffer) => {
             fs.writeFileSync(outputFileNameModern, imageminBuffer);
             if (!fs.existsSync(distFileNameModern)) {
               fs.copyFileSync(outputFileNameModern, distFileNameModern);
@@ -318,7 +319,7 @@ async function makeThumbnails(
             try {
               bar.increment(1, {
                 log: true,
-                filename: `${baseName}${sourceExtName}`
+                filename: `${baseName}${sourceExtName}`,
               });
             } catch (e) {}
           })
@@ -348,25 +349,28 @@ function getSrcSets(src, asDataAttribute = false) {
   const dirName = `${pathPrefix}${path.dirname(src)}/compressed`;
   const baseName = path.basename(src).replace(extName, "");
 
-  return `<source ${asDataAttribute &&
-    `data-`}srcset='${dirName}/${baseName}-modern-sm.webp 500w, ${dirName}/${baseName}-modern-md.webp 768w, ${dirName}/${baseName}-modern-lg.webp 1024w, ${dirName}/${baseName}-modern-hd.webp 1368w' type='image/webp'><source ${asDataAttribute &&
-    `data-`}srcset='${dirName}/${baseName}-sm${extName} 500w, ${dirName}/${baseName}-md${extName} 768w, ${dirName}/${baseName}-lg${extName}, ${dirName}/${baseName}-hd${extName} 1368w'>`;
+  return `<source ${
+    asDataAttribute && `data-`
+  }srcset='${dirName}/${baseName}-modern-sm.webp 500w, ${dirName}/${baseName}-modern-md.webp 768w, ${dirName}/${baseName}-modern-lg.webp 1024w, ${dirName}/${baseName}-modern-hd.webp 1368w' type='image/webp'><source ${
+    asDataAttribute && `data-`
+  }srcset='${dirName}/${baseName}-sm${extName} 500w, ${dirName}/${baseName}-md${extName} 768w, ${dirName}/${baseName}-lg${extName}, ${dirName}/${baseName}-hd${extName} 1368w'>`;
 }
 
 function downloadImageBuffer(imageUrl) {
   return new Promise((resolve, reject) => {
     let options = url.parse(imageUrl);
-    http.get(options, response => {
+    let httpOrHttps = imageUrl.indexOf("https://") >= 0 ? https : http;
+    httpOrHttps.get(options, (response) => {
       let chunks = [];
       response
-        .on("data", chunk => {
+        .on("data", (chunk) => {
           chunks.push(chunk);
         })
         .on("end", () => {
           const buffer = Buffer.concat(chunks);
           resolve(buffer);
         })
-        .on("error", error => {
+        .on("error", (error) => {
           reject(error);
         });
     });
@@ -395,9 +399,7 @@ async function getDefaultImage(src, useBase64 = false) {
 
   if (useBase64) {
     const sourceImagePath = path.resolve(process.cwd(), `${srcPrefix}${src}`);
-    base64Buffer = await sharp(sourceImagePath)
-      .resize(32)
-      .toBuffer();
+    base64Buffer = await sharp(sourceImagePath).resize(32).toBuffer();
   }
 
   return useBase64
@@ -409,5 +411,5 @@ module.exports = {
   getDefaultImage,
   getDimensions,
   getSrcSets,
-  makeThumbnails
+  makeThumbnails,
 };
