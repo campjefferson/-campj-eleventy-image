@@ -1,6 +1,11 @@
-# Eleventy Image Pipeline
+<hr/>
 
 **NOTE:** this package is deprecated. Please consider using the more robust [Eleventy Image](https://www.npmjs.com/package/@11ty/eleventy-img) instead.
+
+<hr/>
+<br/>
+
+# Eleventy Image Pipeline
 
 A configurable Eleventy shortcode that builds multiple resolutions of any image.
 
