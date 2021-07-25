@@ -133,19 +133,19 @@ module.exports = async ({
     rootMargin ? ` data-rootmargin="${rootMargin}"` : ``
   }>${
     useBase64
-      ? `<img src="${imgSrc}" alt="${alt}" loading="auto" width="${dimensions.width}" height="${dimensions.height}" ${imgAttrs}>`
+      ? `<img src="${imgSrc}" alt="${alt}" loading="auto" width="${dimensions.width}" height="${dimensions.height}" ${imgAttrs}/>`
       : ``
   }<picture>
       ${getSrcSets(src, true)}
       ${
         useBase64
-          ? `<img onerror="this.onerror-null" data-src="${altImgSrc}" alt="${alt}" loading="${loading}" width="${dimensions.width}" height="${dimensions.height}" ${img2Attrs}>`
-          : `<img onerror="this.onerror-null" data-src="${imgSrc}" alt="${alt}" loading="${loading}" width="${dimensions.width}" height="${dimensions.height}" ${img2Attrs}>`
+          ? `<img onerror="this.onerror-null" data-src="${altImgSrc}" alt="${alt}" loading="${loading}" width="${dimensions.width}" height="${dimensions.height}" ${img2Attrs}/>`
+          : `<img onerror="this.onerror-null" data-src="${imgSrc}" alt="${alt}" loading="${loading}" width="${dimensions.width}" height="${dimensions.height}" ${img2Attrs}/>`
       }
       <noscript>
       <img src="${useBase64 ? altImgSrc : imgSrc}" alt="${alt}" width="${
     dimensions.width
-  }" height="${dimensions.height}" ${imgAttrs}></noscript>
+  }" height="${dimensions.height}" ${imgAttrs}/></noscript>
       </picture>
       ${
         caption

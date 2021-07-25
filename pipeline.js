@@ -351,9 +351,9 @@ function getSrcSets(src, asDataAttribute = false) {
 
   return `<source ${
     asDataAttribute && `data-`
-  }srcset='${dirName}/${baseName}-modern-sm.webp 500w, ${dirName}/${baseName}-modern-md.webp 768w, ${dirName}/${baseName}-modern-lg.webp 1024w, ${dirName}/${baseName}-modern-hd.webp 1368w' type='image/webp'><source ${
+  }srcset='${dirName}/${baseName}-modern-sm.webp 500w, ${dirName}/${baseName}-modern-md.webp 768w, ${dirName}/${baseName}-modern-lg.webp 1024w, ${dirName}/${baseName}-modern-hd.webp 1368w' type='image/webp'/><source ${
     asDataAttribute && `data-`
-  }srcset='${dirName}/${baseName}-sm${extName} 500w, ${dirName}/${baseName}-md${extName} 768w, ${dirName}/${baseName}-lg${extName}, ${dirName}/${baseName}-hd${extName} 1368w'>`;
+  }srcset='${dirName}/${baseName}-sm${extName} 500w, ${dirName}/${baseName}-md${extName} 768w, ${dirName}/${baseName}-lg${extName}, ${dirName}/${baseName}-hd${extName} 1368w'/>`;
 }
 
 function downloadImageBuffer(imageUrl) {

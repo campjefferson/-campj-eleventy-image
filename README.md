@@ -1,5 +1,7 @@
 # Eleventy Image Pipeline
 
+**NOTE:** this package is deprecated. Please consider using the more robust [Eleventy Image](https://www.npmjs.com/package/@11ty/eleventy-img) instead.
+
 A configurable Eleventy shortcode that builds multiple resolutions of any image.
 
 ## Usage
@@ -45,7 +47,7 @@ in .eleventy.js:
 ```js
 // require
 const { Image } = require("@campj/eleventy-image");
-module.exports = function(eleventyConfig) {
+module.exports = function (eleventyConfig) {
   // Shortcode
   eleventyConfig.addNunjucksAsyncShortcode("Image", Image);
   //
